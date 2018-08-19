@@ -5,11 +5,15 @@ var fs = require('fs');
 var app = express();
 
 app.use(express.static('assets'));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use('/store', function(req,res, next){
+    console.log('Hey I\'m a middleware to /store request!');
+    next();
+})
 
 app.get('/', function(req, res){
     res.sendFile('/index.html')
-})
+});
 
 app.get('/userform', function(req, res){
     const response = {
@@ -17,7 +21,13 @@ app.get('/userform', function(req, res){
         last_name: req.query.last_name
     }
     res.end(JSON.stringify(response));
+});
+
+app.get('/store', function(req,res){
+    res.send('Hi I\'m the store endpoint!');
 })
+
+
 
 var server = app.listen(3000, 'localhost', function() {
     var host = server.address().address;
